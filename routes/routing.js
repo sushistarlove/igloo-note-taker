@@ -1,5 +1,7 @@
 const fs = require("fs");
 const path = require("path");
+const { v4: uuidv4 } = require('uuid');
+
 
 module.exports = (app) => {
   fs.readFile("db/db.json", "utf-8", (err, data) => {
@@ -18,11 +20,12 @@ module.exports = (app) => {
     //api routes
 
     app.get("/api/notes", function (req, res) {
-      res.JSON(notes);
+      res.json(notes);
     });
 
     app.post("/api/notes", function (req, res) {
-      let createNote = req.body;
+      const {title, text} = req.body;
+      const createNote = {title, text, id: uuidv4()}
       notes.push(createNote);
       updateDB();
       return console.log("New note created: " + createNote.title);
@@ -30,6 +33,14 @@ module.exports = (app) => {
 
     app.get("/api/notes/:id", function (req, res) {
       res, json(notes[req.params.id]);
+    });
+
+    app.delete("/api/notes/:id", function (req, res) {
+      const newNotes = notes.filter((note) => note.id !== req.params.id);
+      updateDB(newNotes)
+      res.json({
+        ok: true 
+      })
     });
 
     //html routes
