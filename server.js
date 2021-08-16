@@ -9,7 +9,7 @@ app.use(express.urlencoded({ exended: true }));
 
 app.use(express.json());
 
-app.use(express.static(__dirname));
+app.use(express.static(__dirname+"/public"));
 
 require('./routes/routing')(app);
 
